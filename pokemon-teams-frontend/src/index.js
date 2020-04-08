@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 let config = { "content-type": "application/json", "accept": "application/json" }
                 let pokemon = fetch(POKEMONS_URL, {
                     method: "POST",
-                    headers: config,
-                    body: { "trainer_id": trainer.id }
+                    headers: { "content-type": "application/json" },
+                    body: { "trainer_id": parseInt(trainer.id) }
                 })
                     .then(res => res.json())
                     .then(data => { return data })
