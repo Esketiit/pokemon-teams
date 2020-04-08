@@ -23,17 +23,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
         button.innerText = "Add Pokemon"
         button.onclick = function () {
             if (ul.childNodes.length < 6) {
-                let config = { "content-type": "application/json", "accept": "application/json" }
+                let li = document.createElement('li');
                 let pokemon = fetch(POKEMONS_URL, {
                     method: "POST",
                     headers: { "content-type": "application/json" },
-                    body: { "trainer_id": parseInt(trainer.id) }
+                    body: JSON.stringify({ "trainer_id": trainer.id })
                 })
                     .then(res => res.json())
-                    .then(data => { return data })
+                    .then(data => { return data }
+                    )
                 console.log(pokemon)
+                let releaseButton = document.createElement('button')
+                releaseButton.innerText = "Release"
+                releaseButton.onclick = () => {
+                    releaseButton.parentElement.remove()
+                }
+                li.innerText = `${pokemon.nickname} (${pokemon.species})`
+                li.append(releaseButton)
+                button.parentNode.append(li)
             } else {
-                console.log("full team")
+                console.log(button.parentNode)
             }
         }
         div.setAttribute("class", "card")
@@ -47,9 +56,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
             releaseButton.innerText = "Release"
             releaseButton.onclick = () => {
                 releaseButton.parentElement.remove()
-
+                fetch(`${POKEMONS_URL}/${pokemon.id}`, {
+                    method: "DELETE"
+                })
             }
             li.innerText = `${pokemon.nickname} (${pokemon.species})`
+            li.dataset.id = pokemon.id
             li.append(releaseButton)
             ul.append(li)
         })
